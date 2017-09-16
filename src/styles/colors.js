@@ -8,5 +8,6 @@ export default {
   blackLight: '#525557',
   gray: '#A9AAAB',
   grayLight: '#C1C1C1',
-  grayLighter: '#E3E3E3'
+  grayLighter: '#E3E3E3',
+  grayLightest: '#F3F3F3'
 }
