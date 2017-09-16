@@ -2,7 +2,10 @@
   "name": "fifty-thirty-twenty",
   "version": "0.1.0",
   "private": true,
+  "start": "react-scripts build && node index.js",
   "dependencies": {
+    "body-parser": "^1.18.1",
+    "express": "^4.15.4",
     "polished": "^1.7.0",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
