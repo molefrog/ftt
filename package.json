@@ -1,0 +1,32 @@
+{
+  "name": "fifty-thirty-twenty",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.0.13",
+    "styled-components": "^2.1.2"
+  },
+  "devDependencies": {
+    "eslint": "^4.4.0",
+    "eslint-config-prettier": "^2.3.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-prettier": "^2.1.2",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-react": "^7.1.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "prettier": "^1.5.3",
+    "standard": "^8.2.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
