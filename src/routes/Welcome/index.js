@@ -5,26 +5,52 @@ import Button from '../../ui/Button'
 import { colors } from '../../styles'
 import logoSplash from '../../styles/images/splash-logo.svg'
 
-const Welcome = () => (
-  <WelcomeLayout>
-    <Column left>
-      <Header>Войдите через аккаунт «Открытие»</Header>
-      <LoginText>
-        <p>
-          Предоставьте доступ к своим данным, авторизуясь через приложение банка
-          «Открытие».
-        </p>
-        <p>Мы не используем и не обрабатываем ваши персональные данные.</p>
-      </LoginText>
+import CardOption from '../../components/CardOption'
 
-      <Button>Подключить аккаунт</Button>
-    </Column>
+class Welcome extends React.Component {
+  render() {
+    if (this.props.selectCard) {
+      return (
+        <SelectCard>
+          <Header>Выберите карту</Header>
+          <LoginText>
+            Выберите счет, на основе которого вы будете контроллировать расходы.
+            Вы сможете поменять счет через настройки приложения в любое время.
+          </LoginText>
+          <CardOption name="Дебетовая карта" type="visa" />
+          <CardOption name="Дебетовая карта" type="mir" />
+        </SelectCard>
+      )
+    }
 
-    <Column>
-      <Logo src={logoSplash} />
-    </Column>
-  </WelcomeLayout>
-)
+    return (
+      <WelcomeLayout>
+        <Column left>
+          <Header>Войдите через аккаунт «Открытие»</Header>
+          <LoginText>
+            <p>
+              Предоставьте доступ к своим данным, авторизуясь через приложение
+              банка «Открытие».
+            </p>
+            <p>Мы не используем и не обрабатываем ваши персональные данные.</p>
+          </LoginText>
+
+          <Button>Подключить аккаунт</Button>
+        </Column>
+
+        <Column>
+          <Logo src={logoSplash} />
+        </Column>
+      </WelcomeLayout>
+    )
+  }
+}
+
+const SelectCard = styled.div`
+  max-width: 400px;
+  margin: 0 auto;
+  margin-top: 140px;
+`
 
 const Logo = styled.img`margin-left: 50px;`
 
