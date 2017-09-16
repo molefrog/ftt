@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { rgba } from 'polished'
 
 import { colors } from '../../styles'
+import Roubles from '../Roubles'
 
 // allows to get card icon by card provider
 // e.g. visa, mastercard etc.
@@ -11,12 +12,16 @@ import getCardIcon from './card-types'
 
 // This component represents credit card option item
 const CardOption = props => (
-  <Option>
+  <Option onClick={props.onSelect}>
     <CardIcon icon={getCardIcon(props.type)} />
 
     <div>
       <CardName>{props.name || 'Банковская карта'}</CardName>
-      {props.balance && <CardBalance>{props.balance}</CardBalance>}
+      {props.balance && (
+        <CardBalance>
+          <Roubles amount={props.balance} />
+        </CardBalance>
+      )}
     </div>
   </Option>
 )
@@ -24,7 +29,8 @@ const CardOption = props => (
 CardOption.propTypes = {
   name: PropTypes.string,
   type: PropTypes.string,
-  balance: PropTypes.number
+  balance: PropTypes.number,
+  onSelect: PropTypes.func
 }
 
 export default CardOption

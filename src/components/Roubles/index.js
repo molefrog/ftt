@@ -1,14 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { colors, variables } from '../../styles'
+
 import numeral from 'numeral'
 
-const Roubles = ({ amount }) => (
-  <RoublesContainer>{numeral(amount).format('0[.]00')}₽</RoublesContainer>
-)
+// A small helper component used for sum formatting
+const Roubles = ({ amount }) => {
+  const formatted = numeral(amount)
+    .format('0,0[.]00')
+    .replace(',', ' ')
 
-const RoublesContainer = styled.span`font-size: 16px;`
+  return <Label>{formatted}₽</Label>
+}
+
+const Label = styled.span`font-size: ${props => props.size || 16}px;`
 
 Roubles.propTypes = {
   amount: PropTypes.number.isRequired
