@@ -5,7 +5,7 @@ import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import Dashboard from './routes/Dashboard'
 import Settings from './routes/Settings'
 import Review from './routes/Review'
-import NoMatch from './components/NoMatch'
+import NotFound from './routes/NotFound'
 
 // Local components
 import TopBar from './components/TopBar'
@@ -18,11 +18,11 @@ class App extends Component {
           <TopBar />
 
           <Switch>
-            <Redirect from="/" to="/settings" />
             <Route path="/settings" component={Settings} />
             <Route path="/dashboard" component={Dashboard} />
             <Route path="/review" component={Review} />
-            <Route component={NoMatch} />
+            <Redirect exact from="/" to="/settings" />
+            <Route component={NotFound} />
           </Switch>
         </div>
       </Router>
