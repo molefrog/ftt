@@ -12,7 +12,7 @@ import confirmedIcon from './confirmed-icon.svg'
 const ExpenseItem = ({ expense }) => (
   <Expense>
     <Icon
-      width={28}
+      width={22}
       src={!expense.confirmed ? confirmedIcon : unconfirmedIcon}
     />
     <Info>
@@ -22,7 +22,7 @@ const ExpenseItem = ({ expense }) => (
       <ExpencePlace>{expense.place}</ExpencePlace>
     </Info>
     <ExpenceValue>
-      <Roubles size={18} amount={expense.amount} />
+      <Roubles size={17} amount={expense.amount} />
     </ExpenceValue>
   </Expense>
 )
@@ -40,13 +40,13 @@ const Expense = styled.div`
 `
 
 const ExpenceDate = styled.div`
-  font-size: 16px;
+  font-size: 15px;
   color: ${colors.gray};
   margin-bottom: 2px;
 `
 
 const ExpencePlace = styled.div`
-  font-size: 18px;
+  font-size: 16px;
   color: ${colors.black};
 `
 

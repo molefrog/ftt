@@ -1,8 +1,10 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { colors, variables } from '../../styles'
+
 import ExpencesList from '../../components/ExpencesList'
+import CategoryBox from '../../components/CategoryBox'
+import Roubles from '../../components/Roubles'
 
 const expences = Array(5)
   .fill({
@@ -29,13 +31,21 @@ class Dashboard extends React.Component {
           </Title>
           <Annotation>
             Вы пытаетесь откладывать 20%, тратить на необходимые вещи 50%, а
-            остальные 30% — на хотелки.
+            остальные 30% — на развлечения.
           </Annotation>
         </Header>
         <Categories>
-          <CategoryBox active>Нужды</CategoryBox>
-          <CategoryBox>Хотелки</CategoryBox>
-          <CategoryBox>Накопления</CategoryBox>
+          <CategoryBox active title="Нужды" percent={50}>
+            <Roubles amount={10320} size={18} />
+            {' из '}
+            <Roubles amount={10320} size={18} />
+          </CategoryBox>
+          <CategoryBox title="Развлечения" percent={30}>
+            Хотелки
+          </CategoryBox>
+          <CategoryBox title="Накопления" percent={20}>
+            <Roubles amount={43500} size={22} />
+          </CategoryBox>
         </Categories>
         <Transactions>
           <IncomesList />
@@ -60,6 +70,7 @@ const Header = styled.div`
 const Title = styled.h3`
   font-size: 26px;
   font-weight: 800;
+  line-height: 1.15;
 `
 const Annotation = styled.div`
   color: ${colors.gray};
@@ -73,14 +84,6 @@ const Categories = styled.div`
   margin-bottom: 45px;
 `
 
-const CategoryBox = styled.div`
-  width: 160px;
-  height: 100px;
-  border-radius: 3px;
-  border: 2px ${props => (props.active ? colors.ultraBlue : colors.grayLighter)}
-    solid;
-  padding: 10px;
-`
 const Transactions = styled.div``
 
 const IncomesList = styled.div``
