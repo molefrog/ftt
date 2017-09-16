@@ -38,10 +38,16 @@ const ButtonWrapper = styled.button`
 
   font-weight: 600;
   cursor: pointer;
+  outline: none;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow: 0px 0px 0px 1px ${colors.ultraBlue};
+  }
 
   ${Loader} {
     display: ${props => (props.loading ? 'inline-block' : 'none')};
