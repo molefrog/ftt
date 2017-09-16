@@ -1,3 +1,7 @@
 import colors from './colors'
 
-export { colors }
+const variables = {
+  containerWidth: '580px'
+}
+
+export { colors, variables }
