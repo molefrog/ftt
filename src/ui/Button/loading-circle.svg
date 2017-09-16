@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>loading-circle-dark</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="📦-Shogun-Assets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Custom-Illustrations" transform="translate(-278.000000, -21.000000)">
+            <g id="loading-circle-dark" transform="translate(279.000000, 21.000000)" stroke="#3867FA">
+                <path d="M13.959,12.908 L14.706,13.364 C12.8092925,16.2778542 9.24771781,17.6330579 5.89374885,16.7171224 C2.53977988,15.8011869 0.161382742,12.823836 0.00898296287,9.35039106 C-0.143416817,5.87694608 1.9650761,2.70272985 5.22593642,1.49656417 C8.48679674,0.290398483 12.1533776,1.32846194 14.298,4.065 L13.597,4.59 C11.68277,2.16124487 8.42038972,1.24457623 5.52130336,2.32087832 C2.62221699,3.3971804 0.748399359,6.22069133 0.882854914,9.31019771 C1.01731047,12.3997041 3.12933775,15.0497507 6.11096755,15.8701236 C9.09259736,16.6904965 12.263007,15.4938723 13.959,12.908 Z" id="Shape"></path>
+            </g>
+            <g id="loading-circle" transform="translate(279.000000, 21.000000)"></g>
+        </g>
+    </g>
+</svg>
