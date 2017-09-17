@@ -1,9 +1,12 @@
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import { routerReducer, routerMiddleware } from 'react-router-redux'
 import thunkMiddleware from 'redux-thunk'
-
-import sessionReducer from './modules/session'
 import createSagaMiddleware from 'redux-saga'
+
+// Application modules
+import sessionReducer from './modules/session'
+import transactionsReducer from './modules/transactions'
+import cardsReducer from './modules/cards'
 
 import { rootSaga } from './sagas'
 
@@ -30,7 +33,9 @@ export function configureStore(history) {
   // ---
   const rootReducer = combineReducers({
     router: routerReducer,
-    session: sessionReducer
+    session: sessionReducer,
+    cards: cardsReducer,
+    transactions: transactionsReducer
   })
 
   // ---

@@ -1,28 +1,21 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import Button from '../../ui/Button'
 import { colors } from '../../styles'
 import logoSplash from '../../styles/images/splash-logo.svg'
 
-import CardOption from '../../components/CardOption'
+import { authorizeApplication } from '../../store/modules/session'
 
 class Welcome extends React.Component {
-  render() {
-    if (this.props.selectCard) {
-      return (
-        <SelectCard>
-          <Header>Выберите карту</Header>
-          <LoginText>
-            Выберите счет, на основе которого вы будете контроллировать расходы.
-            Вы сможете поменять счет через настройки приложения в любое время.
-          </LoginText>
-          <CardOption name="Дебетовая карта" type="visa" />
-          <CardOption name="Дебетовая карта" type="mir" />
-        </SelectCard>
-      )
-    }
+  static propTypes = {
+    isAuthorizing: PropTypes.bool,
+    authorizeApp: PropTypes.func
+  }
 
+  render() {
     return (
       <WelcomeLayout>
         <Column left>
@@ -35,7 +28,12 @@ class Welcome extends React.Component {
             <p>Мы не используем и не обрабатываем ваши персональные данные.</p>
           </LoginText>
 
-          <Button>Подключить аккаунт</Button>
+          <Button
+            loading={this.props.isAuthorizing}
+            onClick={this.props.authorizeApp}
+          >
+            Подключить аккаунт
+          </Button>
         </Column>
 
         <Column>
@@ -45,12 +43,6 @@ class Welcome extends React.Component {
     )
   }
 }
-
-const SelectCard = styled.div`
-  max-width: 400px;
-  margin: 0 auto;
-  margin-top: 140px;
-`
 
 const Logo = styled.img`margin-left: 50px;`
 
@@ -68,7 +60,7 @@ const LoginText = styled.div`
 `
 
 const Header = styled.h3`
-  size: 18px;
+  size: 20px;
   font-weight: 500;
   color: ${colors.black};
 `
@@ -83,4 +75,16 @@ const WelcomeLayout = styled.div`
   margin-top: 140px;
 `
 
-export default Welcome
+function mapStateToProps(state) {
+  return {
+    isAuthorizing: state.session.isLoading
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    authorizeApp: () => dispatch(authorizeApplication())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Welcome)
