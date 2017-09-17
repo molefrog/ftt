@@ -10,6 +10,7 @@ import {
   getWants,
   getNeeds,
   getSavings,
+  isSyncing,
   getNeedsLimit,
   getWantsLimit,
   syncTransactions
@@ -18,6 +19,7 @@ import {
 import ExpencesList from '../../components/ExpencesList'
 import CategoryBox from '../../components/CategoryBox'
 import Roubles from '../../components/Roubles'
+import LoadingSpinner from '../../ui/LoadingSpinner'
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -33,7 +35,8 @@ class Dashboard extends React.Component {
     needs: PropTypes.array,
     savings: PropTypes.number,
     limits: PropTypes.object,
-    sync: PropTypes.func
+    sync: PropTypes.func,
+    isSyncing: PropTypes.bool
   }
 
   render() {
@@ -97,9 +100,18 @@ class Dashboard extends React.Component {
           </CategoryBox>
         </Categories>
         <Transactions>
-          <IncomesList />
+          {this.props.isSyncing && (
+            <Loader>
+              <LoadingSpinner />
+            </Loader>
+          )}
+          {!this.props.isSyncing && (
+            <div>
+              <IncomesList />
 
-          <ExpencesList expences={expences} />
+              <ExpencesList expences={expences} />
+            </div>
+          )}
         </Transactions>
       </Container>
     )
@@ -119,6 +131,8 @@ const RefreshButton = styled.div`
     background-color: ${rgba(colors.ultraBlue, 0.06)};
   }
 `
+
+const Loader = styled.div`text-align: center;`
 
 const Container = styled.div`
   width: ${variables.containerWidth};
@@ -166,6 +180,7 @@ const IncomesList = styled.div``
 
 function mapStateToProps(state) {
   return {
+    isSyncing: isSyncing(state),
     savings: getSavings(state),
     wants: getWants(state),
     needs: getNeeds(state),
