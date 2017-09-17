@@ -44,7 +44,7 @@
     "standard": "^8.2.0"
   },
   "scripts": {
-    "start": "node index.js",
+    "start": "node server/index.js",
     "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
