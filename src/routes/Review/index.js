@@ -1,10 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { TransitionMotion, spring, presets } from 'react-motion'
 
+// Styling helpers
 import styled from 'styled-components'
 import { colors, variables } from '../../styles'
 
+// Local components
 import KeyboardArrow from '../../ui/KeyboardArrow'
 import ExpenseItem from '../../components/ExpenseItem'
 import {
@@ -13,11 +16,21 @@ import {
 } from '../../store/modules/transactions'
 
 class Review extends React.Component {
+  constructor(props) {
+    super(props)
+
+    // We need this interval mapping in order to get
+    // the fade animation direction
+    this.wantsMaping = {}
+  }
+
   static propTypes = {
     expensesToReview: PropTypes.array,
     setExpenseTag: PropTypes.func
   }
 
+  // Will assign the category to the expense
+  // Possible values: true/false
   categorizeLastExpense(isNeeds) {
     const lastExpense = this.props.expensesToReview[0]
 
@@ -26,6 +39,7 @@ class Review extends React.Component {
     }
 
     this.props.setExpenseTag(lastExpense.id, isNeeds)
+    this.wantsMaping[lastExpense.id] = !isNeeds
   }
 
   handleKeyDown = event => {
@@ -45,6 +59,16 @@ class Review extends React.Component {
   }
 
   render() {
+    // styles for TransitionMotion
+    const motionStyles = this.props.expensesToReview.map((expense, i) => ({
+      key: expense.id.toString(),
+      data: expense,
+      style: {
+        fade: spring(1.0, presets.gentle),
+        x: spring(0.0, presets.wobbly)
+      }
+    }))
+
     return (
       <div>
         <Container>
@@ -65,9 +89,45 @@ class Review extends React.Component {
         <Playground>
           <Column />
           <ExpenseList>
-            {this.props.expensesToReview.map(expense => {
-              return <ExpenseItem carded key={expense.id} expense={expense} />
-            })}
+            <TransitionMotion
+              willLeave={item => {
+                const id = item.data.id
+
+                // Calculte the animation direction
+                const direction = this.wantsMaping[id] ? 1 : -1
+                return { x: spring(direction), fade: spring(0) }
+              }}
+              willEnter={() => ({ x: 0, fade: 1 })}
+              styles={motionStyles}
+            >
+              {interpolatedStyles => (
+                <div className="action-logger__events">
+                  {interpolatedStyles.map(config => {
+                    const expense = config.data
+                    const { x, fade } = config.style
+
+                    const fadeOffset = 500.0
+                    const maxHeight = 200.0
+                    const translate = fadeOffset * x
+
+                    return (
+                      <ExpenseItemWrapper
+                        key={config.key}
+                        style={{
+                          opacity: fade,
+                          maxHeight: fade * maxHeight,
+                          transform: `translateX(${translate}px)`
+                        }}
+                      >
+                        <ExpenseItemCover>
+                          <ExpenseItem carded expense={expense} />
+                        </ExpenseItemCover>
+                      </ExpenseItemWrapper>
+                    )
+                  })}
+                </div>
+              )}
+            </TransitionMotion>
           </ExpenseList>
           <Column />
         </Playground>
@@ -77,6 +137,13 @@ class Review extends React.Component {
 }
 
 Review.propTypes = {}
+
+const ExpenseItemCover = styled.div`margin-bottom: 10px;`
+
+const ExpenseItemWrapper = styled.div`
+  box-sizing: border-box;
+  overflow: hidden;
+`
 
 const Column = styled.div`flex: 1 1;`
 
@@ -90,7 +157,7 @@ const Playground = styled.div`
 const ExpenseList = styled.div`
   width: 320px;
   height: 380px;
-  overflow: hidden;
+  // overflow-y: hidden;
   position: relative;
 
   &:after {

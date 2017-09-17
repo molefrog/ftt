@@ -41,7 +41,6 @@ const Expense = styled.div`
           border: 2px solid ${colors.grayLighter};
           border-radius: 6px;
           padding: 14px;
-          margin-bottom: 8px;
         `
       : ''};
 `
