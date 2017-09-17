@@ -14,17 +14,20 @@ const app = express()
 
 app.use(bodyParser.json())
 
+// Serve static files
+app.use(express.static(path.resolve('./build')))
+
 app.use((req, res, next) => {
+  // Only use for /api calls
+  const isApiCall = /^\/api\//.test(req.path)
   app.locals.token = req.headers.authorization
-  if (!app.locals.token && req.path !== '/api/session') {
+
+  if (!app.locals.token && isApiCall && req.path !== '/api/session') {
     res.send(401)
     return
   }
   next()
 })
-
-// Serve static files
-app.use(express.static(path.resolve('./build')))
 
 app.post('/api/session', (req, res) => {
   const token = Math.random()

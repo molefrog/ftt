@@ -2,6 +2,7 @@
   "name": "fifty-thirty-twenty",
   "version": "0.1.0",
   "private": true,
+  "alias": "ftt.now.sh",
   "proxy": {
     "/api": {
       "target": "http://localhost:9000"
