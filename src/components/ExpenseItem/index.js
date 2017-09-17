@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
-import moment from 'moment'
 
 import { colors } from '../../styles'
 import Roubles from '../Roubles'
@@ -13,9 +12,7 @@ const ExpenseItem = ({ expense, carded }) => (
   <Expense carded={carded}>
     <Icon width={22} src={expense.reviewed ? confirmedIcon : unconfirmedIcon} />
     <Info>
-      <ExpenceDate>
-        {moment(expense.created_at).format('DD.MM.YYYY HH:mm')}
-      </ExpenceDate>
+      <ExpenceDate>{expense.created_at}</ExpenceDate>
       <ExpencePlace>{expense.place}</ExpencePlace>
     </Info>
     <ExpenceValue>

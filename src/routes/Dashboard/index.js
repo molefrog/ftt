@@ -26,7 +26,7 @@ class Dashboard extends React.Component {
     super(props)
 
     this.state = {
-      currentTab: 'needs'
+      currentTab: 'wants'
     }
   }
 
@@ -56,9 +56,11 @@ class Dashboard extends React.Component {
             остальные 30% — на развлечения.
           </Annotation>
 
-          <RefreshButton onClick={this.props.sync}>
-            Обновить список транзакций
-          </RefreshButton>
+          {!this.props.isSyncing && (
+            <RefreshButton onClick={this.props.sync}>
+              Обновить список транзакций
+            </RefreshButton>
+          )}
         </Header>
         <Categories>
           {/* Needs */}
