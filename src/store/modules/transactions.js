@@ -1,4 +1,5 @@
 import { createAction, handleActions } from 'redux-actions'
+import { createSelector } from 'reselect'
 import _ from 'lodash'
 
 // ---
@@ -46,11 +47,37 @@ export const getWants = state => {
     .value()
 }
 
+export const getBalance = state => parseFloat(state.transactions.balance || 0.0)
+export const getSavingsRate = state => state.transactions.savingsRate
+export const getNeedsRate = state => state.transactions.needsRate
+
+export const getSavings = createSelector(
+  getBalance,
+  getSavingsRate,
+  (balance, rate) => balance * rate
+)
+
+export const getNeedsLimit = createSelector(
+  getBalance,
+  getNeedsRate,
+  (balance, rate) => balance * rate
+)
+
+export const getWantsLimit = createSelector(
+  getBalance,
+  getNeedsRate,
+  getSavingsRate,
+  (balance, rate, srate) => balance * (1 - rate - srate)
+)
+
 // ---
 // Reducer
 // ---
 const initialState = {
   isSyncing: false,
+
+  savingsRate: 0.2,
+  needsRate: 0.5,
 
   expenses: [
     {

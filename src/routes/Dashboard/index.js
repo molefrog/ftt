@@ -4,7 +4,13 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { colors, variables } from '../../styles'
 
-import { getWants, getNeeds } from '../../store/modules/transactions'
+import {
+  getWants,
+  getNeeds,
+  getSavings,
+  getNeedsLimit,
+  getWantsLimit
+} from '../../store/modules/transactions'
 
 import ExpencesList from '../../components/ExpencesList'
 import CategoryBox from '../../components/CategoryBox'
@@ -21,7 +27,9 @@ class Dashboard extends React.Component {
 
   static propTypes = {
     wants: PropTypes.array,
-    needs: PropTypes.array
+    needs: PropTypes.array,
+    savings: PropTypes.number,
+    limits: PropTypes.object
   }
 
   render() {
@@ -53,7 +61,7 @@ class Dashboard extends React.Component {
               <div>
                 <Roubles amount={10320} size={18} />
                 <Separator>{' из '}</Separator>
-                <Roubles amount={10320} size={18} />
+                <Roubles amount={this.props.limits.needs} size={18} />
               </div>
             </CategoryContent>
           </CategoryBox>
@@ -69,14 +77,14 @@ class Dashboard extends React.Component {
               <div>
                 <Roubles amount={10320} size={18} />
                 <Separator>{' из '}</Separator>
-                <Roubles amount={10320} size={18} />
+                <Roubles amount={this.props.limits.wants} size={18} />
               </div>
             </CategoryContent>
           </CategoryBox>
 
           <CategoryBox title="Накопления" percent={20}>
             <CategoryContent>
-              <Roubles amount={43500} size={22} />
+              <Roubles amount={this.props.savings} size={22} />
             </CategoryContent>
           </CategoryBox>
         </Categories>
@@ -136,8 +144,13 @@ const IncomesList = styled.div``
 
 function mapStateToProps(state) {
   return {
+    savings: getSavings(state),
     wants: getWants(state),
-    needs: getNeeds(state)
+    needs: getNeeds(state),
+    limits: {
+      needs: getNeedsLimit(state),
+      wants: getWantsLimit(state)
+    }
   }
 }
 
