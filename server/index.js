@@ -147,7 +147,7 @@ app.post('/api/sync', (req, res) => {
         CardId: +account.card_id
       })
       .then(({ data }) => {
-        account.expences = data.CardTransactionsList[0].CardTransaction
+        account.expenses = data.CardTransactionsList[0].CardTransaction
           .filter(transaction => parseFloat(transaction.TransactionSum) < 0)
           .map(transaction => {
             return {
