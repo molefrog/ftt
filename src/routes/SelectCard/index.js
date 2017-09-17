@@ -38,11 +38,11 @@ class SelectCardRoute extends React.Component {
 
           {this.props.cards.map(card => (
             <CardOption
-              key={card.id}
+              key={card.card_id}
               name={card.name}
-              type={card.type}
-              balance={card.balance}
-              onSelect={() => this.props.setupWithCard(card.id)}
+              type={card.payment_system}
+              balance={parseFloat(card.balance)}
+              onSelect={() => this.props.setupWithCard(card.card_id)}
             />
           ))}
         </Content>
