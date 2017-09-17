@@ -75,7 +75,11 @@ class Dashboard extends React.Component {
           >
             <CategoryContent>
               <div>
-                <Roubles amount={this.props.total.needs} size={18} />
+                <Roubles
+                  amount={this.props.total.needs}
+                  warning={this.props.total.needs > this.props.limits.needs}
+                  size={18}
+                />
                 <Separator>{' из '}</Separator>
                 <Roubles amount={this.props.limits.needs} size={18} />
               </div>
@@ -91,7 +95,11 @@ class Dashboard extends React.Component {
           >
             <CategoryContent>
               <div>
-                <Roubles amount={this.props.total.wants} size={18} />
+                <Roubles
+                  amount={this.props.total.wants}
+                  warning={this.props.total.wants > this.props.limits.wants}
+                  size={18}
+                />
                 <Separator>{' из '}</Separator>
                 <Roubles amount={this.props.limits.wants} size={18} />
               </div>

@@ -5,6 +5,7 @@ export default {
   // Fifty-Thirty-Twenty shades of gray
   white: '#FFFFFF',
   black: '#333235',
+  red: '#E74C3C;',
   blackLight: '#525557',
   gray: '#A9AAAB',
   grayLight: '#C1C1C1',
