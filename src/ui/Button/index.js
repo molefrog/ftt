@@ -55,8 +55,8 @@ const ButtonWrapper = styled.button`
 }
 `
 
-const Button = ({ children, loading }) => (
-  <ButtonWrapper loading={loading}>
+const Button = ({ children, loading, ...rest }) => (
+  <ButtonWrapper loading={loading} {...rest}>
     <Loader />
     <span>{children}</span>
   </ButtonWrapper>
