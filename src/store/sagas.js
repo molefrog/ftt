@@ -25,7 +25,7 @@ function* authorizeAppSaga() {
     const action = yield take(SETUP_WITH_CARD)
 
     yield put(setIsSyncing(true))
-    yield delay(700)
+    yield delay(2000)
     yield put(setIsSyncing(false))
     yield put(setLoading(false))
 

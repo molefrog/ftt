@@ -1,43 +1,67 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { colors } from '../../styles'
 import CardOption from '../../components/CardOption'
+import LoadingSpinner from '../../ui/LoadingSpinner'
 
 // redux actions and selectors
 import { getCards } from '../../store/modules/cards'
-import { setupWithCard } from '../../store/modules/transactions'
+import { setupWithCard, isSyncing } from '../../store/modules/transactions'
 
 class SelectCardRoute extends React.Component {
   static propTypes = {
     cards: PropTypes.array,
-    setupWithCard: PropTypes.func
+    setupWithCard: PropTypes.func,
+    isSyncing: PropTypes.bool
   }
 
   render() {
     return (
       <SelectCard>
-        <Header>Выберите карту</Header>
-        <LoginText>
-          Выберите счет, на основе которого вы будете контроллировать расходы.
-          Вы сможете поменять счет через настройки приложения в любое время.
-        </LoginText>
+        <Header>
+          Выберите карту
+          {this.props.isSyncing && (
+            <Loader>
+              <LoadingSpinner />
+            </Loader>
+          )}
+        </Header>
 
-        {this.props.cards.map(card => (
-          <CardOption
-            key={card.id}
-            name={card.name}
-            type={card.type}
-            balance={card.balance}
-            onSelect={() => this.props.setupWithCard(card.id)}
-          />
-        ))}
+        <Content inactive={this.props.isSyncing}>
+          <LoginText>
+            Выберите счет, на основе которого вы будете контроллировать расходы.
+            Вы сможете поменять счет через настройки приложения в любое время.
+          </LoginText>
+
+          {this.props.cards.map(card => (
+            <CardOption
+              key={card.id}
+              name={card.name}
+              type={card.type}
+              balance={card.balance}
+              onSelect={() => this.props.setupWithCard(card.id)}
+            />
+          ))}
+        </Content>
       </SelectCard>
     )
   }
 }
+
+const Content = styled.div`
+  transition: opacity 0.5s ease;
+
+  ${props =>
+    props.inactive
+      ? css`
+          opacity: 0.5;
+          pointer-events: none;
+        `
+      : ''};
+`
 
 const SelectCard = styled.div`
   max-width: 400px;
@@ -55,11 +79,19 @@ const Header = styled.h3`
   size: 20px;
   font-weight: 500;
   color: ${colors.black};
+  display: flex;
+  align-items: center;
+`
+
+const Loader = styled.div`
+  margin-left: 10px;
+  margin-top: 4px;
 `
 
 function mapStateToProps(state) {
   return {
-    cards: getCards(state)
+    cards: getCards(state),
+    isSyncing: isSyncing(state)
   }
 }
 
