@@ -186,7 +186,7 @@ app.put('/api/expenses/:id/tag', (req, res) => {
     if (error) {
       return res.status(500).json({ error })
     }
-    const expenseId = account.findIndex(el => el.id === req.params.id)
+    const expenseId = account.expenses.findIndex(el => el.id === req.params.id)
     account.expenses[expenseId].is_needs = req.query.is_needs === 'true'
     account.expenses[expenseId].reviewed = true
     db.accounts.update(
