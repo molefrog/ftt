@@ -33,13 +33,13 @@ export const getUntaggedExpenses = state => {
 
 export const getNeeds = state => {
   return _(state.transactions.expenses)
-    .fitler(x => x.isNeeds)
+    .filter(x => x.is_needs)
     .value()
 }
 
 export const getWants = state => {
   return _(state.transactions.expenses)
-    .fitler(x => !x.isNeeds)
+    .filter(x => !x.is_needs)
     .value()
 }
 
@@ -65,6 +65,14 @@ const initialState = {
       amount: -1500.3,
       is_needs: true,
       reviewed: false
+    },
+    {
+      id: 2,
+      created_at: '2013-02-27 09:30:26',
+      place: 'Пяторочка',
+      amount: -1500.3,
+      is_needs: false,
+      reviewed: true
     }
   ]
 }

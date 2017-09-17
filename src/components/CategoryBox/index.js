@@ -6,7 +6,7 @@ import { colors } from '../../styles'
 
 const CategoryBox = props => {
   return (
-    <Box active={props.active}>
+    <Box active={props.active} onClick={props.onSelect}>
       <Header>
         <Title>{props.title}</Title>
         <Percent>{props.percent}%</Percent>
@@ -21,7 +21,8 @@ CategoryBox.propTypes = {
   active: PropTypes.bool,
   title: PropTypes.string,
   percent: PropTypes.number,
-  children: PropTypes.any
+  children: PropTypes.any,
+  onSelect: PropTypes.func
 }
 
 export default CategoryBox
@@ -48,6 +49,7 @@ const Box = styled.div`
   border: 2px ${props => (props.active ? colors.ultraBlue : colors.grayLighter)}
     solid;
   padding: 10px;
+  user-select: none;
 
   width: 160px;
   height: 100px;
