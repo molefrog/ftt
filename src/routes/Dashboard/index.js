@@ -45,7 +45,11 @@ class Dashboard extends React.Component {
 
   render() {
     const { currentTab } = this.state
-
+    const { total, limits, savings: savingsRaw } = this.props
+    limits.sum = limits.needs + limits.wants
+    total.sum = total.needs + total.wants
+    const overExpense = Math.max(total.sum - limits.sum, 0)
+    const savings = savingsRaw - overExpense
     const expences =
       currentTab === 'needs' ? this.props.needs : this.props.wants
 
@@ -119,7 +123,7 @@ class Dashboard extends React.Component {
 
           <CategoryBox title="Накопления" percent={20}>
             <CategoryContent>
-              <Roubles amount={this.props.savings} size={22} />
+              <Roubles amount={savings} size={22} />
             </CategoryContent>
           </CategoryBox>
         </Categories>
