@@ -5,6 +5,7 @@ const Datastore = require('nedb')
 const axios = require('axios')
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'
+axios.defaults.baseURL = 'https://api.open.ru'
 
 const db = {
   cards: new Datastore(),
@@ -44,47 +45,66 @@ app.delete('/api/session', (req, res) => {
 })
 
 app.get('/api/cards', (req, res) => {
-  let cards = []
-  axios
-    .get('https://api.open.ru/MyCards/1.0.0/MyCardsInfo/cardlist')
-    .then(response => {
-      cards = response.data.Cards.Card.map(card => ({
-        name: card.CardName,
-        card_id: card.CardId,
-        type: card.CardType,
-        payment_system: card.CardPaymentSystem
-      }))
-      return Promise.all(
-        cards.map(card => {
-          return axios.post(
-            'https://api.open.ru/MyCards/1.0.0/MyCardsInfo/balance',
-            {
-              CardId: card.card_id
-            }
-          )
-        })
-      )
-    })
-    .then(responses => {
-      console.log(responses)
-      cards = cards.map(card => {
-        const balance = responses.find(
-          responce => responce.data.CardId === card.card_id
-        )
-        return Object.assign(card, {
-          balance: balance.Value
-        })
-      })
-      db.cards.insert(cards, (error, newDoc) => {
-        if (error) {
-          return res.status(500).json({ error })
-        }
-        res.json(cards)
-      })
-    })
-    .catch(error => {
-      res.status(500).json({ error })
-    })
+  let cards = [
+    {
+      name: 'Кредитная',
+      card_id: '31337',
+      type: 'credit',
+      payment_system: 'visa',
+      balance: '100000.00'
+    },
+    {
+      name: 'Дебетовая',
+      card_id: '42',
+      type: 'debit',
+      payment_system: 'mir',
+      balance: '55000.00'
+    }
+  ]
+  db.cards.insert(cards, (error, newCards) => {
+    if (error) {
+      return res.status(500).json({ error })
+    }
+    res.json(newCards)
+  })
+  // let cards = []
+  // axios
+  //   .get('/MyCards/1.0.0/MyCardsInfo/cardlist')
+  //   .then(response => {
+  //     cards = response.data.Cards.Card.map(card => ({
+  //       name: card.CardName,
+  //       card_id: card.CardId,
+  //       type: card.CardType,
+  //       payment_system: card.CardPaymentSystem
+  //     }))
+  //     const requests = cards.map(card => {
+  //       return axios.post('/MyCards/1.0.0/MyCardsInfo/balance', {
+  //         CardId: +card.card_id
+  //       })
+  //     })
+  //     return Promise.all(requests)
+  //   })
+  //   .then(responses => {
+  //     const parsedResponces = responses.map(response => response.data)
+  //     console.log(parsedResponces)
+  //     cards = cards.map(card => {
+  //       const balance = parsedResponces.find(response => {
+  //         return response.CardId === card.card_id
+  //       })
+  //       card.balance = balance.CardBalance[0].Value
+  //       return card
+  //     })
+  //     db.cards.insert(cards, (error, newDoc) => {
+  //       if (error) {
+  //         return res.status(500).json({ error })
+  //       }
+  //       res.json(cards)
+  //     })
+  //   })
+  //   .catch(error => {
+  //     console.log(error)
+  //     res.status(500).json({ error })
+  //   })
 })
 
 app.post('/api/cards/:id/setup', (req, res) => {
