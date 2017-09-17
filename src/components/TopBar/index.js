@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import { isLoggedIn } from '../../store/modules/session'
+import { getUntaggedExpenses } from '../../store/modules/transactions'
 
 import {
   Decoration,
@@ -12,12 +13,16 @@ import {
   MenuContainer,
   MenuItem,
   LogoContainer,
+  LeftMenu,
+  RightMenu,
+  MenuBadge,
   Logo
 } from './elements'
 
 class TopBar extends React.Component {
   static propTypes = {
-    isLoggedIn: PropTypes.bool
+    isLoggedIn: PropTypes.bool,
+    retroBadgeCount: PropTypes.number
   }
 
   render() {
@@ -34,8 +39,17 @@ class TopBar extends React.Component {
                 </Link>
               </LogoContainer>
 
-              <MenuItem to="/dashboard">Лента трат</MenuItem>
-              <MenuItem to="/review">Ретроспектива</MenuItem>
+              <LeftMenu>
+                <MenuItem to="/dashboard">Лента трат</MenuItem>
+                <MenuItem to="/review">
+                  Ретроспектива
+                  <MenuBadge>{this.props.retroBadgeCount}</MenuBadge>
+                </MenuItem>
+              </LeftMenu>
+
+              <RightMenu>
+                <MenuItem to="/logout">Выйти</MenuItem>
+              </RightMenu>
             </MenuContainer>
           </MenuBar>
         )}
@@ -46,7 +60,8 @@ class TopBar extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    isLoggedIn: isLoggedIn(state)
+    isLoggedIn: isLoggedIn(state),
+    retroBadgeCount: getUntaggedExpenses(state).length
   }
 }
 

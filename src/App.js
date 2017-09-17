@@ -8,6 +8,7 @@ import Review from './routes/Review'
 import NotFound from './routes/NotFound'
 import Welcome from './routes/Welcome'
 import SelectCard from './routes/SelectCard'
+import Logout from './routes/Logout'
 
 // Local components
 import TopBar from './components/TopBar'
@@ -24,6 +25,7 @@ class App extends Component {
           <Route path="/settings" component={Settings} />
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/review" component={Review} />
+          <Route path="/logout" component={Logout} />
           <Redirect exact from="/" to="/welcome" />
           <Route component={NotFound} />
         </Switch>

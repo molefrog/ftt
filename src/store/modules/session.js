@@ -6,6 +6,7 @@ import { createAction, handleActions } from 'redux-actions'
 export const SET_TOKEN = 'SESSION/SET_TOKEN'
 export const SET_LOADING = 'SESSION/SET_LOADING'
 export const AUTHORIZE_APPLICATION = 'SESSION/AUTHORIZE_APPLICATION'
+export const LOGOUT = 'SESSION/LOGOUT'
 
 // ---
 // Action creators
@@ -15,6 +16,7 @@ export const setLoading = createAction(SET_LOADING, isLoading => ({
   isLoading
 }))
 export const authorizeApplication = createAction(AUTHORIZE_APPLICATION)
+export const logout = createAction(LOGOUT)
 
 // ---
 // Selectors

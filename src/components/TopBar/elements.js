@@ -8,13 +8,42 @@ import logoImage from '../../styles/images/logo.svg'
 // This works simply because `NavLink` accepts
 // className prop
 export const MenuItem = styled(NavLink)`
-  margin-right: 30px;
   font-size: 18px;
   color: ${colors.black};
   text-decoration: none;
 
   &.active {
     color: ${colors.ultraBlue};
+  }
+`
+
+export const MenuBadge = styled.div`
+  display: inline-block;
+  background: ${colors.ultraBlue};
+
+  width: 23px;
+  height: 23px;
+  border-radius: 23px;
+
+  margin-left: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+`
+
+export const RightMenu = styled.div`text-align: right;`
+
+export const LeftMenu = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 1 1;
+
+  ${MenuItem} {
+    margin-right: 20px;
   }
 `
 

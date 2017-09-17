@@ -2,9 +2,23 @@ import { select, take, put } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import { push } from 'react-router-redux'
 
-import { AUTHORIZE_APPLICATION, setToken, setLoading } from './modules/session'
+import {
+  AUTHORIZE_APPLICATION,
+  LOGOUT,
+  setToken,
+  setLoading
+} from './modules/session'
 import { SETUP_WITH_CARD, setIsSyncing } from './modules/transactions'
 import { loadCards } from './modules/cards'
+
+function* logoutSaga() {
+  while (true) {
+    console.log('sdf')
+    yield take(LOGOUT)
+    yield put(setToken(null))
+    yield put(push('/welcome'))
+  }
+}
 
 function* authorizeAppSaga() {
   while (true) {
@@ -33,5 +47,5 @@ function* authorizeAppSaga() {
 }
 
 export function* rootSaga() {
-  yield [authorizeAppSaga()]
+  yield [authorizeAppSaga(), logoutSaga()]
 }
