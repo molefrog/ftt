@@ -10,6 +10,7 @@ export const SET_IS_SYNCING = 'TRANSACTIONS/SET_IS_SYNCING'
 export const SET_EXPENSE_TAG = 'TRANSACTIONS/SET_EXPENSE_TAG'
 export const LOAD_ACCOUNT = 'TRANSACTIONS/LOAD_ACCOUNT'
 export const SYNC_TRANSACTIONS = 'TRANSACTIONS/SYNC_TRANSACTIONS'
+export const UPDATE_EXPENSE_TAG = 'TRANSACTIONS/UPDATE_EXPENSE_TAG'
 
 // ---
 // Action creators
@@ -22,6 +23,13 @@ export const setExpenseTag = createAction(SET_EXPENSE_TAG, (id, isNeeds) => ({
   id,
   isNeeds
 }))
+export const updateExpenseTag = createAction(
+  UPDATE_EXPENSE_TAG,
+  (id, isNeeds) => ({
+    id,
+    isNeeds
+  })
+)
 
 export const loadAccount = createAction(LOAD_ACCOUNT)
 export const syncTransactions = createAction(SYNC_TRANSACTIONS)

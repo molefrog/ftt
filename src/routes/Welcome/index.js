@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
@@ -7,12 +8,20 @@ import Button from '../../ui/Button'
 import { colors } from '../../styles'
 import logoSplash from '../../styles/images/splash-logo.svg'
 
-import { authorizeApplication } from '../../store/modules/session'
+import { authorizeApplication, isLoggedIn } from '../../store/modules/session'
 
 class Welcome extends React.Component {
   static propTypes = {
     isAuthorizing: PropTypes.bool,
-    authorizeApp: PropTypes.func
+    authorizeApp: PropTypes.func,
+    isLoggedIn: PropTypes.bool,
+    history: PropTypes.object
+  }
+
+  componentDidMount() {
+    if (this.props.isLoggedIn) {
+      this.props.history.push('/dashboard')
+    }
   }
 
   render() {
@@ -77,6 +86,7 @@ const WelcomeLayout = styled.div`
 
 function mapStateToProps(state) {
   return {
+    isLoggedIn: isLoggedIn(state),
     isAuthorizing: state.session.isLoading
   }
 }
@@ -87,4 +97,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Welcome)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Welcome))

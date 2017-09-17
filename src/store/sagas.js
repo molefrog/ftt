@@ -14,7 +14,9 @@ import {
   SETUP_WITH_CARD,
   setIsSyncing,
   loadAccount,
-  SYNC_TRANSACTIONS
+  SYNC_TRANSACTIONS,
+  UPDATE_EXPENSE_TAG,
+  setExpenseTag
 } from './modules/transactions'
 import { loadCards } from './modules/cards'
 
@@ -142,6 +144,27 @@ function* syncAccountSaga() {
   }
 }
 
+function* taggingSaga() {
+  while (true) {
+    const action = yield take(UPDATE_EXPENSE_TAG)
+
+    const token = yield getApiToken()
+
+    const { id, isNeeds } = action.payload
+
+    const apiClient = axios.create({
+      headers: { Authorization: token }
+    })
+
+    try {
+      const needs = isNeeds ? 'true' : 'false'
+      yield apiClient.put(`/api/expenses/${id}/tag?is_needs=${needs}`)
+    } catch (error) {}
+
+    yield put(setExpenseTag(id, isNeeds))
+  }
+}
+
 export function* rootSaga() {
-  yield [authorizeAppSaga(), logoutSaga(), syncAccountSaga()]
+  yield [authorizeAppSaga(), logoutSaga(), syncAccountSaga(), taggingSaga()]
 }

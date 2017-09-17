@@ -12,7 +12,7 @@ import KeyboardArrow from '../../ui/KeyboardArrow'
 import ExpenseItem from '../../components/ExpenseItem'
 import {
   getUntaggedExpenses,
-  setExpenseTag
+  updateExpenseTag
 } from '../../store/modules/transactions'
 
 class Review extends React.Component {
@@ -26,7 +26,7 @@ class Review extends React.Component {
 
   static propTypes = {
     expensesToReview: PropTypes.array,
-    setExpenseTag: PropTypes.func
+    updateExpenseTag: PropTypes.func
   }
 
   // Will assign the category to the expense
@@ -38,7 +38,7 @@ class Review extends React.Component {
       return
     }
 
-    this.props.setExpenseTag(lastExpense.id, isNeeds)
+    this.props.updateExpenseTag(lastExpense.id, isNeeds)
     this.wantsMaping[lastExpense.id] = !isNeeds
   }
 
@@ -101,7 +101,7 @@ class Review extends React.Component {
               styles={motionStyles}
             >
               {interpolatedStyles => (
-                <div className="action-logger__events">
+                <div>
                   {interpolatedStyles.map(config => {
                     const expense = config.data
                     const { x, fade } = config.style
@@ -152,12 +152,9 @@ const Playground = styled.div`
   margin: auto;
 
   display: flex;
-`
 
-const ExpenseList = styled.div`
-  width: 320px;
   height: 380px;
-  // overflow-y: hidden;
+  overflow-y: hidden;
   position: relative;
 
   &:after {
@@ -172,6 +169,8 @@ const ExpenseList = styled.div`
     background: linear-gradient(rgba(0, 0, 0, 0), white);
   }
 `
+
+const ExpenseList = styled.div`width: 320px;`
 
 const Container = styled.div`
   width: ${variables.containerWidth};
@@ -206,7 +205,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    setExpenseTag: (...args) => dispatch(setExpenseTag(...args))
+    updateExpenseTag: (...args) => dispatch(updateExpenseTag(...args))
   }
 }
 
