@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { TransitionMotion, spring, presets } from 'react-motion'
+import { Motion, TransitionMotion, spring, presets } from 'react-motion'
 
 // Styling helpers
 import styled from 'styled-components'
@@ -94,7 +94,14 @@ class Review extends React.Component {
           <Column left>
             <Stats>
               <StatsLabel>Нужды</StatsLabel>
-              <Roubles size={28} amount={Math.abs(this.props.total.needs)} />
+              <Motion
+                defaultStyle={{ amount: Math.abs(this.props.total.needs) }}
+                style={{ amount: spring(Math.abs(this.props.total.needs)) }}
+              >
+                {value => (
+                  <Roubles size={28} amount={Math.ceil(value.amount)} />
+                )}
+              </Motion>
             </Stats>
           </Column>
           <ExpenseList>
@@ -141,7 +148,14 @@ class Review extends React.Component {
           <Column>
             <Stats>
               <StatsLabel>Желания</StatsLabel>
-              <Roubles size={28} amount={Math.abs(this.props.total.wants)} />
+              <Motion
+                defaultStyle={{ amount: Math.abs(this.props.total.wants) }}
+                style={{ amount: spring(Math.abs(this.props.total.wants)) }}
+              >
+                {value => (
+                  <Roubles size={28} amount={Math.ceil(value.amount)} />
+                )}
+              </Motion>
             </Stats>
           </Column>
         </Playground>
