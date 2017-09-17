@@ -45,66 +45,52 @@ app.delete('/api/session', (req, res) => {
 })
 
 app.get('/api/cards', (req, res) => {
-  let cards = [
-    {
-      name: 'Кредитная',
-      card_id: '31337',
-      type: 'credit',
-      payment_system: 'visa',
-      balance: '100000.00'
-    },
-    {
-      name: 'Дебетовая',
-      card_id: '42',
-      type: 'debit',
-      payment_system: 'mir',
-      balance: '55000.00'
-    }
-  ]
-  db.cards.insert(cards, (error, newCards) => {
-    if (error) {
-      return res.status(500).json({ error })
-    }
-    res.json(newCards)
-  })
-  // let cards = []
-  // axios
-  //   .get('/MyCards/1.0.0/MyCardsInfo/cardlist')
-  //   .then(response => {
-  //     cards = response.data.Cards.Card.map(card => ({
-  //       name: card.CardName,
-  //       card_id: card.CardId,
-  //       type: card.CardType,
-  //       payment_system: card.CardPaymentSystem
-  //     }))
-  //     const requests = cards.map(card => {
-  //       return axios.post('/MyCards/1.0.0/MyCardsInfo/balance', {
-  //         CardId: +card.card_id
-  //       })
-  //     })
-  //     return Promise.all(requests)
-  //   })
-  //   .then(responses => {
-  //     const parsedResponces = responses.map(response => response.data)
-  //     console.log(parsedResponces)
-  //     cards = cards.map(card => {
-  //       const balance = parsedResponces.find(response => {
-  //         return response.CardId === card.card_id
-  //       })
-  //       card.balance = balance.CardBalance[0].Value
-  //       return card
-  //     })
-  //     db.cards.insert(cards, (error, newDoc) => {
-  //       if (error) {
-  //         return res.status(500).json({ error })
-  //       }
-  //       res.json(cards)
-  //     })
-  //   })
-  //   .catch(error => {
-  //     console.log(error)
-  //     res.status(500).json({ error })
-  //   })
+  let cards = []
+  axios
+    .get('/MyCards/1.0.0/MyCardsInfo/cardlist')
+    .then(response => {
+      cards = response.data.Cards.Card.map(card => ({
+        name: card.CardName,
+        card_id: card.CardId,
+        type: card.CardType,
+        payment_system: card.CardPaymentSystem
+      }))
+
+      const promiseSerial = funcs =>
+        funcs.reduce(
+          (promise, func) =>
+            promise.then(result =>
+              func().then(Array.prototype.concat.bind(result))
+            ),
+          Promise.resolve([])
+        )
+
+      const requests = cards.map(card => () => {
+        return axios.post('/MyCards/1.0.0/MyCardsInfo/balance', {
+          CardId: +card.card_id
+        })
+      })
+      return promiseSerial(requests)
+    })
+    .then(responses => {
+      const parsedResponces = responses.map(response => response.data)
+      cards = cards.map(card => {
+        const balance = parsedResponces.find(response => {
+          return response.CardId === card.card_id
+        })
+        card.balance = balance.CardBalance[0].Value
+        return card
+      })
+      db.cards.insert(cards, (error, newDoc) => {
+        if (error) {
+          return res.status(500).json({ error })
+        }
+        res.json(cards)
+      })
+    })
+    .catch(error => {
+      res.status(500).json({ error })
+    })
 })
 
 app.post('/api/cards/:id/setup', (req, res) => {
