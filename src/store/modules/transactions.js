@@ -57,6 +57,20 @@ export const getWants = state => {
     .value()
 }
 
+export const getExpenses = state => state.transactions.expenses
+
+export const getNeedsTotal = createSelector(getExpenses, expenses => {
+  return _.sum(
+    expenses.filter(x => x.is_needs).map(x => Math.abs(x.amount || 0.0))
+  )
+})
+
+export const getWantsTotal = createSelector(getExpenses, expenses => {
+  return _.sum(
+    expenses.filter(x => !x.is_needs).map(x => Math.abs(x.amount || 0.0))
+  )
+})
+
 export const getBalance = state => parseFloat(state.transactions.balance || 0.0)
 export const getSavingsRate = state => state.transactions.savingsRate
 export const getNeedsRate = state => state.transactions.needsRate

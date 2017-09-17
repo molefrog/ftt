@@ -13,7 +13,9 @@ import {
   isSyncing,
   getNeedsLimit,
   getWantsLimit,
-  syncTransactions
+  syncTransactions,
+  getNeedsTotal,
+  getWantsTotal
 } from '../../store/modules/transactions'
 
 import ExpencesList from '../../components/ExpencesList'
@@ -35,6 +37,7 @@ class Dashboard extends React.Component {
     needs: PropTypes.array,
     savings: PropTypes.number,
     limits: PropTypes.object,
+    total: PropTypes.object,
     sync: PropTypes.func,
     isSyncing: PropTypes.bool
   }
@@ -72,7 +75,7 @@ class Dashboard extends React.Component {
           >
             <CategoryContent>
               <div>
-                <Roubles amount={10320} size={18} />
+                <Roubles amount={this.props.total.needs} size={18} />
                 <Separator>{' из '}</Separator>
                 <Roubles amount={this.props.limits.needs} size={18} />
               </div>
@@ -88,7 +91,7 @@ class Dashboard extends React.Component {
           >
             <CategoryContent>
               <div>
-                <Roubles amount={10320} size={18} />
+                <Roubles amount={this.props.total.wants} size={18} />
                 <Separator>{' из '}</Separator>
                 <Roubles amount={this.props.limits.wants} size={18} />
               </div>
@@ -186,6 +189,10 @@ function mapStateToProps(state) {
     savings: getSavings(state),
     wants: getWants(state),
     needs: getNeeds(state),
+    total: {
+      needs: getNeedsTotal(state),
+      wants: getWantsTotal(state)
+    },
     limits: {
       needs: getNeedsLimit(state),
       wants: getWantsLimit(state)
