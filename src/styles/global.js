@@ -6,19 +6,19 @@ import { injectGlobal } from 'styled-components'
 injectGlobal`
   @font-face {
     font-family: 'RickRoll';
-    src: url('./fonts/Rick.ttf');
+    src: url('/fonts/Rick.ttf');
     font-weight: 500;
   }
 
   @font-face {
     font-family: 'RickRoll';
-    src: url('./fonts/RickMedium.ttf');
+    src: url('/fonts/RickMedium.ttf');
     font-weight: 600;
   }
 
   @font-face {
     font-family: 'RickRoll';
-    src: url('./fonts/RickBlack.ttf');
+    src: url('/fonts/RickBlack.ttf');
     font-weight: 800;
   }
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
+import { ConnectedRouter } from 'react-router-redux'
 
 import buildHistory from './history'
 import { configureStore } from './store'
@@ -17,7 +18,9 @@ const { store, sagaMiddleware } = configureStore(history)
 
 const Application = () => (
   <Provider store={store}>
-    <App />
+    <ConnectedRouter history={history}>
+      <App />
+    </ConnectedRouter>
   </Provider>
 )
 
