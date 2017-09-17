@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import moment from 'moment'
 
 import { colors } from '../../styles'
@@ -9,12 +9,9 @@ import Roubles from '../Roubles'
 import unconfirmedIcon from './unconfirmed-icon.svg'
 import confirmedIcon from './confirmed-icon.svg'
 
-const ExpenseItem = ({ expense }) => (
-  <Expense>
-    <Icon
-      width={22}
-      src={!expense.confirmed ? confirmedIcon : unconfirmedIcon}
-    />
+const ExpenseItem = ({ expense, carded }) => (
+  <Expense carded={carded}>
+    <Icon width={22} src={expense.reviewed ? confirmedIcon : unconfirmedIcon} />
     <Info>
       <ExpenceDate>
         {moment(expense.created_at).format('DD.MM.YYYY HH:mm')}
@@ -37,6 +34,16 @@ const Expense = styled.div`
   display: flex;
   align-items: center;
   padding: 14px 0;
+
+  ${props =>
+    props.carded
+      ? css`
+          border: 2px solid ${colors.grayLighter};
+          border-radius: 6px;
+          padding: 14px;
+          margin-bottom: 8px;
+        `
+      : ''};
 `
 
 const ExpenceDate = styled.div`
@@ -53,7 +60,8 @@ const ExpencePlace = styled.div`
 const ExpenceValue = styled.div``
 
 ExpenseItem.propTypes = {
-  expense: PropTypes.object
+  expense: PropTypes.object,
+  carded: PropTypes.bool
 }
 
 export default ExpenseItem
