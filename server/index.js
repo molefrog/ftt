@@ -138,7 +138,42 @@ app.get('/api/account', (req, res) => {
 })
 
 app.post('/api/sync', (req, res) => {
-  res.json('ok')
+  db.accounts.findOne({ token: app.locals.token }, (error, account) => {
+    if (error) {
+      return res.status(500).json({ error })
+    }
+    axios
+      .post('/MyCards/1.0.0/MyCardsInfo/history', {
+        CardId: +account.card_id
+      })
+      .then(({ data }) => {
+        account.expences = data.CardTransactionsList[0].CardTransaction
+          .filter(transaction => parseFloat(transaction.TransactionSum) < 0)
+          .map(transaction => {
+            return {
+              created_at: transaction.TransactionDate,
+              place: transaction.TransactionPlace,
+              amount: parseFloat(transaction.TransactionSum),
+              is_needs: false,
+              reviewed: false
+            }
+          })
+        db.update(
+          { token: app.locals.token },
+          account,
+          {},
+          (error, numReplaced) => {
+            if (error) {
+              return res.status(500).json({ error })
+            }
+            res.json(account)
+          }
+        )
+      })
+      .catch(error => {
+        res.status(500).json({ error })
+      })
+  })
 })
 
 app.put('/api/expenses/:id/tag', (req, res) => {
