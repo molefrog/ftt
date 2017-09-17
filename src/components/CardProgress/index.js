@@ -4,13 +4,13 @@ import styled from 'styled-components'
 
 import { colors } from '../../styles'
 
-import interpolate from 'color-interpolate'
+import { interpolateRgb } from 'd3-interpolate'
 
 // A small helper component used for sum formatting
 const CardProgress = ({ amount, total }) => {
   const percent = Math.min(100, 100.0 * amount / total)
-  const cerp = interpolate(['#FFCC33', '#F0383A'])
 
+  const cerp = interpolateRgb('#FFCC33', '#F0383A')
   const color = percent < 50 ? colors.green : cerp(percent / 100.0)
 
   return (
