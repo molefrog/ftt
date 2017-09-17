@@ -147,20 +147,22 @@ app.post('/api/sync', (req, res) => {
         CardId: +account.card_id
       })
       .then(({ data }) => {
-        account.expenses = data.CardTransactionsList[0].CardTransaction
-          .filter(transaction => parseFloat(transaction.TransactionSum) < 0)
-          .map(transaction => {
-            return {
-              id: Math.random()
-                .toString(16)
-                .slice(2),
-              created_at: transaction.TransactionDate,
-              place: transaction.TransactionPlace,
-              amount: parseFloat(transaction.TransactionSum),
-              is_needs: false,
-              reviewed: false
-            }
-          })
+        account.expenses = account.expenses.concat(
+          data.CardTransactionsList[0].CardTransaction
+            .filter(transaction => parseFloat(transaction.TransactionSum) < 0)
+            .map(transaction => {
+              return {
+                id: Math.random()
+                  .toString(16)
+                  .slice(2),
+                created_at: transaction.TransactionDate,
+                place: transaction.TransactionPlace,
+                amount: parseFloat(transaction.TransactionSum),
+                is_needs: false,
+                reviewed: false
+              }
+            })
+        )
         db.accounts.update(
           { token: app.locals.token },
           account,
