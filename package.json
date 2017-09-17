@@ -9,10 +9,12 @@
   },
   "start": "react-scripts build && node index.js",
   "dependencies": {
+    "axios": "^0.16.2",
     "body-parser": "^1.18.1",
     "express": "^4.15.4",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
+    "nedb": "^1.8.0",
     "numeral": "^2.0.6",
     "polished": "^1.7.0",
     "prop-types": "^15.5.10",
@@ -43,6 +45,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "server": "node server/index.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
