@@ -6,16 +6,26 @@ import {
   AUTHORIZE_APPLICATION,
   LOGOUT,
   setToken,
-  setLoading
+  setLoading,
+  getSessionToken
 } from './modules/session'
 import { SETUP_WITH_CARD, setIsSyncing } from './modules/transactions'
 import { loadCards } from './modules/cards'
 
+const TOKEN_LS_KEY = 'FTT_TOKEN'
+const { localStorage } = window
+
+function* getApiToken() {
+  return yield select(getSessionToken)
+}
+
 function* logoutSaga() {
   while (true) {
-    console.log('sdf')
     yield take(LOGOUT)
+
+    // Discard the token and remove from the LS
     yield put(setToken(null))
+    localStorage.removeItem(TOKEN_LS_KEY)
     yield put(push('/welcome'))
   }
 }
@@ -26,7 +36,15 @@ function* authorizeAppSaga() {
 
     yield put(setLoading(true))
     yield delay(700)
-    yield put(setToken(1234))
+
+    const token = 1234
+
+    // set the new token
+    yield put(setToken(token))
+    localStorage.setItem(TOKEN_LS_KEY, token)
+
+    const token2 = yield getApiToken()
+    console.log(token2)
 
     yield put(
       loadCards([
@@ -48,4 +66,15 @@ function* authorizeAppSaga() {
 
 export function* rootSaga() {
   yield [authorizeAppSaga(), logoutSaga()]
+}
+
+export function* appInitSaga() {
+  const token = localStorage.getItem(TOKEN_LS_KEY)
+
+  if (token) {
+    yield put(setToken(token))
+    yield put(push('/dashboard'))
+  } else {
+    yield put(push('/welcome'))
+  }
 }
