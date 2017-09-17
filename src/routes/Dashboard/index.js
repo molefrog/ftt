@@ -22,6 +22,7 @@ import ExpencesList from '../../components/ExpencesList'
 import CategoryBox from '../../components/CategoryBox'
 import Roubles from '../../components/Roubles'
 import LoadingSpinner from '../../ui/LoadingSpinner'
+import CardProgress from '../../components/CardProgress'
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -74,7 +75,7 @@ class Dashboard extends React.Component {
             percent={50}
           >
             <CategoryContent>
-              <div>
+              <Line>
                 <Roubles
                   amount={this.props.total.needs}
                   warning={this.props.total.needs > this.props.limits.needs}
@@ -82,7 +83,12 @@ class Dashboard extends React.Component {
                 />
                 <Separator>{' из '}</Separator>
                 <Roubles amount={this.props.limits.needs} size={18} />
-              </div>
+              </Line>
+
+              <CardProgress
+                amount={this.props.total.needs}
+                total={this.props.limits.needs}
+              />
             </CategoryContent>
           </CategoryBox>
 
@@ -94,7 +100,7 @@ class Dashboard extends React.Component {
             percent={30}
           >
             <CategoryContent>
-              <div>
+              <Line>
                 <Roubles
                   amount={this.props.total.wants}
                   warning={this.props.total.wants > this.props.limits.wants}
@@ -102,7 +108,12 @@ class Dashboard extends React.Component {
                 />
                 <Separator>{' из '}</Separator>
                 <Roubles amount={this.props.limits.wants} size={18} />
-              </div>
+              </Line>
+
+              <CardProgress
+                amount={this.props.total.wants}
+                total={this.props.limits.wants}
+              />
             </CategoryContent>
           </CategoryBox>
 
@@ -130,6 +141,8 @@ class Dashboard extends React.Component {
     )
   }
 }
+
+const Line = styled.div`white-space: nowrap;`
 
 const RefreshButton = styled.div`
   display: inline-block;
@@ -159,6 +172,7 @@ const Separator = styled.span`
 
 const CategoryContent = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   height: 60px;
   align-items: center;

@@ -1,6 +1,7 @@
 export default {
   // Ultramarine color — the primary UI color
   ultraBlue: '#3867FA',
+  green: '#24CC82',
 
   // Fifty-Thirty-Twenty shades of gray
   white: '#FFFFFF',

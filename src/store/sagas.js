@@ -114,6 +114,7 @@ export function* appInitSaga() {
     } catch (error) {
       yield logout()
       yield put(push('/welcome'))
+      return
     }
 
     yield put(push('/dashboard'))
