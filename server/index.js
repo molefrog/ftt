@@ -143,4 +143,8 @@ app.put('/api/expenses/:id/tag', (req, res) => {
   })
 })
 
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve('./build/index.html'))
+})
+
 app.listen(9000)
