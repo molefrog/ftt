@@ -151,6 +151,9 @@ app.post('/api/sync', (req, res) => {
           .filter(transaction => parseFloat(transaction.TransactionSum) < 0)
           .map(transaction => {
             return {
+              id: Math.random()
+                .toString(16)
+                .slice(2),
               created_at: transaction.TransactionDate,
               place: transaction.TransactionPlace,
               amount: parseFloat(transaction.TransactionSum),
