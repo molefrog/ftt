@@ -158,7 +158,7 @@ app.post('/api/sync', (req, res) => {
               reviewed: false
             }
           })
-        db.update(
+        db.accounts.update(
           { token: app.locals.token },
           account,
           {},
@@ -184,7 +184,7 @@ app.put('/api/expenses/:id/tag', (req, res) => {
     const expenseId = account.findIndex(el => el.id === req.params.id)
     account.expenses[expenseId].is_needs = req.query.is_needs === 'true'
     account.expenses[expenseId].reviewed = true
-    db.update(
+    db.accounts.update(
       { token: app.locals.token },
       account,
       {},
