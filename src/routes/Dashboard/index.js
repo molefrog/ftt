@@ -2,14 +2,17 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+
 import { colors, variables } from '../../styles'
+import { rgba } from 'polished'
 
 import {
   getWants,
   getNeeds,
   getSavings,
   getNeedsLimit,
-  getWantsLimit
+  getWantsLimit,
+  syncTransactions
 } from '../../store/modules/transactions'
 
 import ExpencesList from '../../components/ExpencesList'
@@ -29,7 +32,8 @@ class Dashboard extends React.Component {
     wants: PropTypes.array,
     needs: PropTypes.array,
     savings: PropTypes.number,
-    limits: PropTypes.object
+    limits: PropTypes.object,
+    sync: PropTypes.func
   }
 
   render() {
@@ -48,6 +52,10 @@ class Dashboard extends React.Component {
             Вы пытаетесь откладывать 20%, тратить на необходимые вещи 50%, а
             остальные 30% — на развлечения.
           </Annotation>
+
+          <RefreshButton onClick={this.props.sync}>
+            Обновить список транзакций
+          </RefreshButton>
         </Header>
         <Categories>
           {/* Needs */}
@@ -97,6 +105,20 @@ class Dashboard extends React.Component {
     )
   }
 }
+
+const RefreshButton = styled.div`
+  display: inline-block;
+  margin-top: 4px;
+  color: ${colors.ultraBlue};
+  cursor: pointer;
+  padding: 4px 5px;
+  user-select: none;
+  border-radius: 3px;
+
+  &:hover {
+    background-color: ${rgba(colors.ultraBlue, 0.06)};
+  }
+`
 
 const Container = styled.div`
   width: ${variables.containerWidth};
@@ -154,4 +176,10 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps)(Dashboard)
+function mapDispatchToProps(dispatch) {
+  return {
+    sync: () => dispatch(syncTransactions())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)

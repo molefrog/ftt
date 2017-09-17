@@ -13,7 +13,8 @@ import {
 import {
   SETUP_WITH_CARD,
   setIsSyncing,
-  loadAccount
+  loadAccount,
+  SYNC_TRANSACTIONS
 } from './modules/transactions'
 import { loadCards } from './modules/cards'
 
@@ -90,10 +91,6 @@ function* authorizeAppSaga() {
   }
 }
 
-export function* rootSaga() {
-  yield [authorizeAppSaga(), logoutSaga()]
-}
-
 export function* appInitSaga() {
   const token = localStorage.getItem(TOKEN_LS_KEY)
 
@@ -106,6 +103,11 @@ export function* appInitSaga() {
 
     try {
       const accountResponse = yield apiClient.get(`/api/account`)
+
+      if (!accountResponse.data) {
+        throw new Error('The account data is empty')
+      }
+
       yield put(loadAccount(accountResponse.data))
     } catch (error) {
       yield logout()
@@ -116,4 +118,30 @@ export function* appInitSaga() {
   } else {
     yield put(push('/welcome'))
   }
+}
+
+function* syncAccountSaga() {
+  while (true) {
+    yield take(SYNC_TRANSACTIONS)
+
+    yield put(setIsSyncing(true))
+    yield delay(1000)
+
+    const token = yield getApiToken()
+
+    const apiClient = axios.create({
+      headers: { Authorization: token }
+    })
+
+    try {
+      const response = yield apiClient.post('/api/sync')
+      yield put(loadAccount(response.data))
+    } catch (error) {}
+
+    yield put(setIsSyncing(false))
+  }
+}
+
+export function* rootSaga() {
+  yield [authorizeAppSaga(), logoutSaga(), syncAccountSaga()]
 }
