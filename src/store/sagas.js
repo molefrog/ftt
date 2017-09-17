@@ -152,6 +152,7 @@ function* taggingSaga() {
     const token = yield getApiToken()
 
     const { id, isNeeds } = action.payload
+    yield put(setExpenseTag(id, isNeeds))
 
     const apiClient = axios.create({
       headers: { Authorization: token }
@@ -161,8 +162,6 @@ function* taggingSaga() {
       const needs = isNeeds ? 'true' : 'false'
       yield apiClient.put(`/api/expenses/${id}/tag?is_needs=${needs}`)
     } catch (error) {}
-
-    yield put(setExpenseTag(id, isNeeds))
   }
 }
 
