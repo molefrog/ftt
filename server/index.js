@@ -24,7 +24,7 @@ app.use((req, res, next) => {
 })
 
 // Serve static files
-app.use(express.static(path.resolve('./public')))
+app.use(express.static(path.resolve('./build')))
 
 app.post('/api/session', (req, res) => {
   const token = Math.random()
