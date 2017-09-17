@@ -108,7 +108,7 @@ app.get('/api/cards', (req, res) => {
 })
 
 app.post('/api/cards/:id/setup', (req, res) => {
-  db.cards.findOne({ card_id: +req.params.id }, (error, card) => {
+  db.cards.findOne({ card_id: req.params.id }, (error, card) => {
     if (error) {
       return res.status(500).json({ error })
     }

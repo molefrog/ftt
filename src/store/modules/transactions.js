@@ -7,6 +7,7 @@ import _ from 'lodash'
 export const SETUP_WITH_CARD = 'TRANSACTIONS/SETUP_WITH_CARD'
 export const SET_IS_SYNCING = 'TRANSACTIONS/SET_IS_SYNCING'
 export const SET_EXPENSE_TAG = 'TRANSACTIONS/SET_EXPENSE_TAG'
+export const LOAD_ACCOUNT = 'TRANSACTIONS/LOAD_ACCOUNT'
 
 // ---
 // Action creators
@@ -19,6 +20,8 @@ export const setExpenseTag = createAction(SET_EXPENSE_TAG, (id, isNeeds) => ({
   id,
   isNeeds
 }))
+
+export const loadAccount = createAction(LOAD_ACCOUNT)
 
 // ---
 // Selectors
@@ -79,6 +82,11 @@ const initialState = {
 
 const reducer = handleActions(
   {
+    [LOAD_ACCOUNT]: (state, action) => ({
+      ...state,
+      ...action.payload
+    }),
+
     [SET_IS_SYNCING]: (state, action) => ({
       ...state,
       isSyncing: action.payload

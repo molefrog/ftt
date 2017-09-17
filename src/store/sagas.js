@@ -10,7 +10,11 @@ import {
   setLoading,
   getSessionToken
 } from './modules/session'
-import { SETUP_WITH_CARD, setIsSyncing } from './modules/transactions'
+import {
+  SETUP_WITH_CARD,
+  setIsSyncing,
+  loadAccount
+} from './modules/transactions'
 import { loadCards } from './modules/cards'
 
 const TOKEN_LS_KEY = 'FTT_TOKEN'
@@ -20,25 +24,28 @@ function* getApiToken() {
   return yield select(getSessionToken)
 }
 
+function* logout() {
+  const token = yield getApiToken()
+
+  if (!token) {
+    return
+  }
+
+  const apiClient = axios.create({
+    headers: { Authorization: token }
+  })
+  // Discard the token and remove from the LS
+  yield apiClient.delete('/api/session')
+
+  yield put(setToken(null))
+  localStorage.removeItem(TOKEN_LS_KEY)
+  yield put(push('/welcome'))
+}
+
 function* logoutSaga() {
   while (true) {
     yield take(LOGOUT)
-
-    const token = yield getApiToken()
-
-    if (!token) {
-      continue
-    }
-
-    const apiClient = axios.create({
-      headers: { Authorization: token }
-    })
-    // Discard the token and remove from the LS
-    yield apiClient.delete('/api/session')
-
-    yield put(setToken(null))
-    localStorage.removeItem(TOKEN_LS_KEY)
-    yield put(push('/welcome'))
+    yield logout()
   }
 }
 
@@ -63,32 +70,20 @@ function* authorizeAppSaga() {
       headers: { Authorization: token }
     })
 
-    // const cardsResponse = yield apiClient.get('/api/cards')
+    const cardsResponse = yield apiClient.get('/api/cards')
 
-    yield put(
-      loadCards([
-        {
-          card_id: 1,
-          name: 'Кредитная карта',
-          balance: '25495.4',
-          payment_system: 'mir'
-        },
-        {
-          card_id: 2,
-          name: 'Дебетовая карта',
-          balance: '44800.4',
-          payment_system: 'visa'
-        }
-      ])
-    )
+    yield put(loadCards(cardsResponse.data))
     yield put(push('/welcome/cards'))
 
     const action = yield take(SETUP_WITH_CARD)
-    const cardId = action.payload
-    console.log(cardId)
+    const cardId = action.payload.cardId
 
     yield put(setIsSyncing(true))
-    yield delay(700)
+
+    const setupResponse = yield apiClient.post(`/api/cards/${cardId}/setup`)
+    yield put(loadAccount(setupResponse.data))
+    yield delay(1000)
+
     yield put(setIsSyncing(false))
     yield put(setLoading(false))
     yield put(push('/dashboard'))
@@ -104,6 +99,19 @@ export function* appInitSaga() {
 
   if (token) {
     yield put(setToken(token))
+
+    const apiClient = axios.create({
+      headers: { Authorization: token }
+    })
+
+    try {
+      const accountResponse = yield apiClient.get(`/api/account`)
+      yield put(loadAccount(accountResponse.data))
+    } catch (error) {
+      yield logout()
+      yield put(push('/welcome'))
+    }
+
     yield put(push('/dashboard'))
   } else {
     yield put(push('/welcome'))
