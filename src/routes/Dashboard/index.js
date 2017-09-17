@@ -123,7 +123,7 @@ class Dashboard extends React.Component {
 
           <CategoryBox title="Накопления" percent={20}>
             <CategoryContent>
-              <Roubles amount={savings} size={22} />
+              <Roubles amount={savings} warning={savings < 0} size={22} />
             </CategoryContent>
           </CategoryBox>
         </Categories>
