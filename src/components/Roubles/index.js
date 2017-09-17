@@ -20,7 +20,7 @@ const Roubles = ({ amount, size, warning = false }) => {
 
 const Label = styled.span`
   font-size: ${props => props.size || 16}px;
-  color: ${props => (props.warning ? colors.red : colors.black)};
+  ${props => (props.warning ? `color: ${colors.red}` : '')};
 `
 
 Roubles.propTypes = {

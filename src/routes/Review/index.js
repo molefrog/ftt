@@ -10,9 +10,12 @@ import { colors, variables } from '../../styles'
 // Local components
 import KeyboardArrow from '../../ui/KeyboardArrow'
 import ExpenseItem from '../../components/ExpenseItem'
+import Roubles from '../../components/Roubles'
 import {
   getUntaggedExpenses,
-  updateExpenseTag
+  updateExpenseTag,
+  getNeedsRawTotal,
+  getWantsRawTotal
 } from '../../store/modules/transactions'
 
 class Review extends React.Component {
@@ -26,7 +29,8 @@ class Review extends React.Component {
 
   static propTypes = {
     expensesToReview: PropTypes.array,
-    updateExpenseTag: PropTypes.func
+    updateExpenseTag: PropTypes.func,
+    total: PropTypes.object
   }
 
   // Will assign the category to the expense
@@ -87,7 +91,12 @@ class Review extends React.Component {
         </Container>
 
         <Playground>
-          <Column />
+          <Column left>
+            <Stats>
+              <StatsLabel>Нужды</StatsLabel>
+              <Roubles size={28} amount={Math.abs(this.props.total.needs)} />
+            </Stats>
+          </Column>
           <ExpenseList>
             <TransitionMotion
               willLeave={item => {
@@ -129,7 +138,12 @@ class Review extends React.Component {
               )}
             </TransitionMotion>
           </ExpenseList>
-          <Column />
+          <Column>
+            <Stats>
+              <StatsLabel>Желания</StatsLabel>
+              <Roubles size={28} amount={Math.abs(this.props.total.wants)} />
+            </Stats>
+          </Column>
         </Playground>
       </div>
     )
@@ -138,6 +152,12 @@ class Review extends React.Component {
 
 Review.propTypes = {}
 
+const Stats = styled.div`
+  display: inline-block;
+  position: relative;
+  top: 100px;
+`
+
 const ExpenseItemCover = styled.div`margin-bottom: 10px;`
 
 const ExpenseItemWrapper = styled.div`
@@ -145,10 +165,15 @@ const ExpenseItemWrapper = styled.div`
   overflow: hidden;
 `
 
-const Column = styled.div`flex: 1 1;`
+const Column = styled.div`
+  flex: 1 1;
+  text-align: right;
+
+  ${props => (props.left ? 'text-align: left' : '')};
+`
 
 const Playground = styled.div`
-  max-width: 1000px;
+  max-width: 1100px;
   margin: auto;
 
   display: flex;
@@ -168,6 +193,12 @@ const Playground = styled.div`
     height: 200px;
     background: linear-gradient(rgba(0, 0, 0, 0), white);
   }
+`
+
+const StatsLabel = styled.div`
+  font-size: 20px;
+  color: ${colors.ultraBlue};
+  text-transform: uppercase;
 `
 
 const ExpenseList = styled.div`width: 320px;`
@@ -199,7 +230,11 @@ const Title = styled.h3`
 
 function mapStateToProps(state) {
   return {
-    expensesToReview: getUntaggedExpenses(state)
+    expensesToReview: getUntaggedExpenses(state),
+    total: {
+      needs: getNeedsRawTotal(state),
+      wants: getWantsRawTotal(state)
+    }
   }
 }
 
