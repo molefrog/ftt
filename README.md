@@ -7,6 +7,8 @@ This budgeting rule helps people to wisely manage their expenses and savings. He
   1. 50% you spend on **"needs"**: life-related things like helthcare, rent, food etc.
   2. 30% you spend on **"wants"**: restaurants, leisure etc.
   3. 20% you save.
+  
+<img src="https://raw.githubusercontent.com/molefrog/ftt/master/design/showcase.gif" data-canonical-src="https://raw.githubusercontent.com/molefrog/ftt/master/design/showcase.gif" width="450" />
 
 ## Designs assets location
 You can find Sketch design sources inside `/design` folder. This file contains general application
