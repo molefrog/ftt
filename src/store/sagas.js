@@ -62,9 +62,6 @@ function* authorizeAppSaga() {
     const createSession = yield axios.post('/api/session')
     const token = createSession.data.token
 
-    // An artificial delay
-    yield delay(800)
-
     // set the new token
     yield put(setToken(token))
     localStorage.setItem(TOKEN_LS_KEY, token)
@@ -85,7 +82,6 @@ function* authorizeAppSaga() {
 
     const setupResponse = yield apiClient.post(`/api/cards/${cardId}/setup`)
     yield put(loadAccount(setupResponse.data))
-    yield delay(1000)
 
     yield put(setIsSyncing(false))
     yield put(setLoading(false))
@@ -128,8 +124,6 @@ function* syncAccountSaga() {
     yield take(SYNC_TRANSACTIONS)
 
     yield put(setIsSyncing(true))
-    yield delay(1000)
-
     const token = yield getApiToken()
 
     const apiClient = axios.create({

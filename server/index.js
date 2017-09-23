@@ -2,10 +2,8 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const path = require('path')
 const Datastore = require('nedb')
-const axios = require('axios')
 
-axios.defaults.headers.post['Content-Type'] = 'application/json'
-axios.defaults.baseURL = 'https://api.open.ru'
+const adapter = require('./fake-adapter')
 
 const db = {
   cards: new Datastore(),
@@ -45,58 +43,15 @@ app.delete('/api/session', (req, res) => {
 })
 
 app.get('/api/cards', (req, res) => {
-  let cards = []
-  axios
-    .get('/MyCards/1.0.0/MyCardsInfo/cardlist')
-    .then(response => {
-      cards = response.data.Cards.Card.map(card => ({
-        name: card.CardName,
-        card_id: card.CardId,
-        type: card.CardType,
-        payment_system: card.CardPaymentSystem
-      }))
-
-      const promiseSerial = funcs =>
-        funcs.reduce(
-          (promise, func) =>
-            promise.then(result =>
-              func().then(Array.prototype.concat.bind(result))
-            ),
-          Promise.resolve([])
-        )
-
-      const requests = cards.map(card => () => {
-        return axios.post('/MyCards/1.0.0/MyCardsInfo/balance', {
-          CardId: +card.card_id
-        })
-      })
-      return promiseSerial(requests)
-    })
-    .then(responses => {
-      const parsedResponces = responses.map(response => response.data)
-      cards = cards.map(card => {
-        const balance = parsedResponces.find(response => {
-          return response.CardId === card.card_id
-        })
-        card.balance = balance.CardBalance[0].Value
-        return card
-      })
-      db.cards.insert(cards, (error, newDoc) => {
-        if (error) {
-          return res.status(500).json({ error })
-        }
-        res.json(cards)
-      })
-    })
-    .catch(error => {
-      res.status(500).json({ error })
-    })
+  adapter.fetchCards().then(cards => res.json(cards))
 })
 
 app.post('/api/cards/:id/setup', (req, res) => {
-  db.cards.findOne({ card_id: req.params.id }, (error, card) => {
-    if (error) {
-      return res.status(500).json({ error })
+  adapter.fetchCards().then(cards => {
+    const card = cards.filter(x => x.card_id === req.params.id)[0]
+
+    if (!card) {
+      return res.status(500).json({ error: 'No card found' })
     }
     const account = {
       token: app.locals.token,
@@ -128,27 +83,12 @@ app.post('/api/sync', (req, res) => {
     if (error) {
       return res.status(500).json({ error })
     }
-    axios
-      .post('/MyCards/1.0.0/MyCardsInfo/history', {
-        CardId: +account.card_id
-      })
-      .then(({ data }) => {
-        account.expenses = account.expenses.concat(
-          data.CardTransactionsList[0].CardTransaction
-            .filter(transaction => parseFloat(transaction.TransactionSum) < 0)
-            .map(transaction => {
-              return {
-                id: Math.random()
-                  .toString(16)
-                  .slice(2),
-                created_at: transaction.TransactionDate,
-                place: transaction.TransactionPlace,
-                amount: parseFloat(transaction.TransactionSum),
-                is_needs: false,
-                reviewed: false
-              }
-            })
-        )
+
+    adapter
+      .generateTransactions()
+      .then(transactions => {
+        account.expenses = account.expenses.concat(transactions)
+
         db.accounts.update(
           { token: app.locals.token },
           account,

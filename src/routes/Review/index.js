@@ -187,7 +187,7 @@ const Column = styled.div`
 `
 
 const Playground = styled.div`
-  max-width: 1100px;
+  max-width: 1000px;
   margin: auto;
 
   display: flex;
