@@ -1,6 +1,7 @@
 const icons = {
   visa: require('./visa.png'),
-  mir: require('./mir.jpg')
+  mir: require('./mir.jpg'),
+  mastercard: require('./mastercard.jpg')
 }
 
 const getIcon = type => {
