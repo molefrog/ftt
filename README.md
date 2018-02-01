@@ -18,7 +18,8 @@ style guide as well as designs of all application screens.
 The code can be deployed using just one command `now`.
 
 ## Starting the project up
-`npm start` or `yarn start` runs the app in development mode.
+`npm start` or `yarn start` runs the development server.
+`npm run dev` or `yarn run dev` runs the app in development mode.
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 `npm run build` or `yarn build` Builds the app for production to the `build` folder.
